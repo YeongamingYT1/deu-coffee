@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DE.U Coffee — Architecture, Nature & Urban Sanctuary</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Playfair Display (Italic serif headers) & Inter (Clean UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind Custom Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        canvas: '#F9F8F6',
+                        charcoal: '#1C1B1A',
+                        forest: '#2C362D',
+                        sand: '#E3DDD3',
+                        espresso: '#5C4A42',
+                        stoneLight: '#EFECE6',
+                    },
+                    fontFamily: {
+                        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(24px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --surface-canvas: #F9F8F6;
+            --primary-text: #1C1B1A;
+            --forest-green: #2C362D;
+            --warm-sand: #E3DDD3;
+            --espresso: #5C4A42;
+        }
+
+        body {
+            background-color: var(--surface-canvas);
+            color: var(--primary-text);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, .font-editorial {
+            font-family: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+        }
+
+        /* Glassmorphism Navigation */
+        .glass-nav {
+            background: rgba(249, 248, 246, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(28, 27, 26, 0.06);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F8F6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1CBC0;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5C4A42;
+        }
+
+        .image-zoom {
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .group:hover .image-zoom {
+            transform: scale(1.04);
+        }
+
+        /* Hide specific page views by default */
+        .page-view {
+            display: none;
+        }
+        .page-view.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-canvas text-charcoal selection:bg-forest selection:text-canvas">
+
+    <!-- Navigation Header -->
+    <header id="site-header" class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#index" onclick="switchPage('index')" class="flex items-center gap-3 group">
+                <span class="text-2xl md:text-3xl font-serif tracking-widest font-semibold text-charcoal group-hover:text-forest transition-colors">DE.U COFFEE</span>
+                <span class="hidden md:inline-block text-xs uppercase tracking-widest border border-forest/30 px-2 py-0.5 rounded-full text-forest">Est. 2021</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden lg:flex items-center gap-8 font-medium text-sm tracking-wide">
+                <button onclick="switchPage('index')" data-nav="index" class="nav-link py-2 text-charcoal hover:text-forest transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-forest hover:after:w-full after:transition-all">Hub</button>
+                <button onclick="switchPage('dago')" data-nav="dago" class="nav-link py-2 text-charcoal hover:text-forest transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-forest hover:after:w-full after:transition-all">Dago (Mountain)</button>
+                <button onclick="switchPage('riau')" data-nav="riau" class="nav-link py-2 text-charcoal hover:text-forest transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-forest hover:after:w-full after:transition-all">Riau (Urban)</button>
+                <button onclick="switchPage('braga')" data-nav="braga" class="nav-link py-2 text-charcoal hover:text-forest transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-forest hover:after:w-full after:transition-all">Braga (Heritage)</button>
+                <button onclick="switchPage('story')" data-nav="story" class="nav-link py-2 text-charcoal hover:text-forest transition-colors relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-forest hover:after:w-full after:transition-all">Story & Philosophy</button>
+            </nav>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-4">
+                <button onclick="openModal()" class="hidden sm:inline-flex items-center gap-2 bg-forest text-canvas px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider hover:bg-espresso transition-all shadow-sm">
+                    <i class="fa-regular fa-compass"></i> Plan Visit
+                </button>
+                
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2 text-charcoal hover:text-forest focus:outline-none" aria-label="Toggle Menu">
+                    <i id="mobile-menu-icon" class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Drawer -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-canvas border-b border-charcoal/10 px-6 py-6 shadow-xl animate-fade-in">
+            <div class="flex flex-col gap-4 font-serif text-2xl">
+                <button onclick="switchPage('index'); toggleMobileMenu();" class="text-left py-1 hover:text-forest">Parent Hub</button>
+                <button onclick="switchPage('dago'); toggleMobileMenu();" class="text-left py-1 hover:text-forest">Dago Mountain Sanctuary</button>
+                <button onclick="switchPage('riau'); toggleMobileMenu();" class="text-left py-1 hover:text-forest">Riau Urban Brutalist</button>
+                <button onclick="switchPage('braga'); toggleMobileMenu();" class="text-left py-1 hover:text-forest">Braga Heritage Bar</button>
+                <button onclick="switchPage('story'); toggleMobileMenu();" class="text-left py-1 hover:text-forest">Story & Architecture</button>
+                <div class="pt-4 border-t border-charcoal/10">
+                    <button onclick="openModal(); toggleMobileMenu();" class="w-full bg-forest text-canvas py-3 rounded-xl font-sans text-xs uppercase tracking-widest font-semibold">
+                        Plan Your Visit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+
+        <!-- ================= PAGE 1: INDEX.HTML (PARENT HUB) ================= -->
+        <div id="page-index" class="page-view active">
+            <!-- Cinematic Hero Intro -->
+            <section class="relative min-h-[90vh] flex items-center justify-center px-6 py-20 overflow-hidden bg-charcoal text-canvas">
+                <div class="absolute inset-0 z-0 opacity-40">
+                    <img src="https://placehold.co/1920x1080/2C362D/E3DDD3?text=DE.U+Coffee+Ecosystem" alt="DE.U Coffee Ecosystem" class="w-full h-full object-cover image-zoom">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-transparent z-10"></div>
+                
+                <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-slide-up">
+                    <span class="inline-block uppercase tracking-[0.3em] text-xs font-semibold text-sand bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                        Bandung Coffee Architecture
+                    </span>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tight leading-none text-canvas">
+                        Spaces of Calm & Craft
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-sand/90 text-base md:text-lg font-light leading-relaxed">
+                        DE.U Coffee is an exploration of space, coffee, and community across three distinct architectural chapters in Bandung — from pine-fringed mountain ridges to brutalist urban blocks and vintage heritage alleys.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                        <button onclick="switchPage('dago')" class="w-full sm:w-auto bg-sand text-charcoal px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all shadow-lg">
+                            Explore Flagship Dago <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                        <button onclick="switchPage('story')" class="w-full sm:w-auto border border-sand/40 text-canvas px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white/10 transition-all">
+                            Our Philosophy
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Branch Switcher Section -->
+            <section class="py-24 px-6 max-w-7xl mx-auto">
+                <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+                    <span class="text-xs uppercase tracking-[0.25em] text-espresso font-semibold">The Destinations</span>
+                    <h2 class="text-4xl md:text-6xl font-serif italic">Three Locations, One Soul</h2>
+                    <p class="text-charcoal/70 text-sm md:text-base">
+                        Select a branch below to immerse yourself in its architectural context, signature rituals, and localized ambiance.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Dago Card -->
+                    <div onclick="switchPage('dago')" class="group cursor-pointer bg-stoneLight rounded-3xl overflow-hidden border border-charcoal/10 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col">
+                        <div class="relative h-80 overflow-hidden">
+                            <img src="https://placehold.co/800x600/2C362D/E3DDD3?text=Dago+Mountain+Sanctuary" alt="Dago Branch" class="w-full h-full object-cover image-zoom">
+                            <div class="absolute top-4 right-4 bg-charcoal/80 backdrop-blur-md text-canvas text-xs uppercase tracking-widest px-3 py-1 rounded-full">
+                                800m Elevation
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow justify-between space-y-6">
+                            <div class="space-y-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-forest">Mountain Branch</span>
+                                <h3 class="text-3xl font-serif italic">DE.U Dago</h3>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    Perched above the city mist among towering pine trees. Featuring natural brutalism, open-air terraces, and tranquil mountain breezes.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-charcoal/10 font-semibold text-xs uppercase tracking-wider text-forest group-hover:translate-x-1 transition-transform">
+                                <span>Explore Experience</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Riau Card -->
+                    <div onclick="switchPage('riau')" class="group cursor-pointer bg-stoneLight rounded-3xl overflow-hidden border border-charcoal/10 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col">
+                        <div class="relative h-80 overflow-hidden">
+                            <img src="https://placehold.co/800x600/5C4A42/F9F8F6?text=Riau+Urban+Sanctuary" alt="Riau Branch" class="w-full h-full object-cover image-zoom">
+                            <div class="absolute top-4 right-4 bg-charcoal/80 backdrop-blur-md text-canvas text-xs uppercase tracking-widest px-3 py-1 rounded-full">
+                                Urban Core
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow justify-between space-y-6">
+                            <div class="space-y-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-espresso">Urban Branch</span>
+                                <h3 class="text-3xl font-serif italic">DE.U Riau</h3>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    A streamlined sanctuary in the city's pulsing avenue. Sleek glass panels, exposed raw concrete, and focused acoustic design for creators.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-charcoal/10 font-semibold text-xs uppercase tracking-wider text-espresso group-hover:translate-x-1 transition-transform">
+                                <span>Explore Experience</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Braga Card -->
+                    <div onclick="switchPage('braga')" class="group cursor-pointer bg-stoneLight rounded-3xl overflow-hidden border border-charcoal/10 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col">
+                        <div class="relative h-80 overflow-hidden">
+                            <img src="https://placehold.co/800x600/1C1B1A/E3DDD3?text=Braga+Heritage+Alley" alt="Braga Branch" class="w-full h-full object-cover image-zoom">
+                            <div class="absolute top-4 right-4 bg-charcoal/80 backdrop-blur-md text-canvas text-xs uppercase tracking-widest px-3 py-1 rounded-full">
+                                Historic Alley
+                            </div>
+                        </div>
+                        <div class="p-8 flex flex-col flex-grow justify-between space-y-6">
+                            <div class="space-y-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-charcoal">Heritage Branch</span>
+                                <h3 class="text-3xl font-serif italic">DE.U Braga</h3>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    Nestled in the historic colonial street. Intimate bar counters, warm amber lighting, vinyl hums, and late-night espresso curation.
+                                </p>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t border-charcoal/10 font-semibold text-xs uppercase tracking-wider text-charcoal group-hover:translate-x-1 transition-transform">
+                                <span>Explore Experience</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Brand Manifesto Section -->
+            <section class="py-24 bg-forest text-canvas px-6 relative overflow-hidden">
+                <div class="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+                    <span class="uppercase tracking-[0.3em] text-xs font-semibold text-sand">Brand Manifesto</span>
+                    <h2 class="text-5xl md:text-7xl font-serif italic leading-tight">
+                        "We do not just brew coffee. We sculpt the moments between your thoughts."
+                    </h2>
+                    <p class="text-sand/90 text-lg font-light leading-relaxed max-w-2xl mx-auto">
+                        In an era of hyper-speed, DE.U is an invitation to deceleration. Every beam of natural light, every curve of polished terrazzo, and every note of washed Arabica is meticulously tuned for human presence.
+                    </p>
+                    <div class="pt-6">
+                        <button onclick="switchPage('story')" class="bg-sand text-charcoal px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all shadow-xl">
+                            Read Full Architectural Story
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= PAGE 2: DAGO.HTML (MOUNTAIN BRANCH) ================= -->
+        <div id="page-dago" class="page-view">
+            <!-- Fullscreen Cinematic Hero -->
+            <section class="relative min-h-[92vh] flex items-center justify-center px-6 py-20 overflow-hidden bg-forest text-canvas">
+                <div class="absolute inset-0 z-0 opacity-50">
+                    <img src="https://placehold.co/1920x1080/2C362D/FFFFFF?text=DE.U+Dago+Hills" alt="DE.U Dago Mountain" class="w-full h-full object-cover image-zoom">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-forest via-forest/40 to-transparent z-10"></div>
+                
+                <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-slide-up">
+                    <div class="flex items-center justify-center gap-3">
+                        <span class="text-xs uppercase tracking-[0.3em] font-semibold text-sand bg-charcoal/30 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                            Flagship Mountain Sanctuary
+                        </span>
+                        <span class="text-xs uppercase tracking-[0.2em] font-semibold text-sand bg-charcoal/30 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                            800m Elevation
+                        </span>
+                    </div>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tight leading-none text-canvas">
+                        Coffee Above the City
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-sand/90 text-base md:text-lg font-light leading-relaxed">
+                        Perched high on the mist-kissed ridges of Dago Pakar. Where architectural concrete meets organic pine forest canopy and crisp mountain air.
+                    </p>
+                    <div class="flex items-center justify-center gap-4 pt-4">
+                        <a href="#dago-menu" class="bg-sand text-charcoal px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all shadow-lg">
+                            View Mountain Rituals
+                        </a>
+                        <button onclick="openModal()" class="border border-sand/40 text-canvas px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white/10 transition-all">
+                            Plan Dago Visit
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Asymmetric Editorial Split Layout -->
+            <section class="py-24 px-6 max-w-7xl mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-6">
+                        <span class="text-xs uppercase tracking-[0.25em] text-forest font-semibold">Architectural Narrative</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic leading-tight">The Architecture of Air</h2>
+                        <p class="text-charcoal/80 text-base leading-relaxed font-light">
+                            Designed to dissolve boundaries between indoor sanctuary and untamed valley. DE.U Dago utilizes cantilevered viewing decks, floor-to-ceiling Low-E glass, and open-air courtyards that let the mountain wind weave through your conversation.
+                        </p>
+                        <p class="text-charcoal/80 text-base leading-relaxed font-light">
+                            Every morning, cloud inversion rolls over the valley below, turning our communal oak tables into islands in the sky.
+                        </p>
+                        <div class="grid grid-cols-2 gap-6 pt-6 border-t border-charcoal/10">
+                            <div>
+                                <span class="block text-3xl font-serif italic text-forest">800m</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Altitude above sea level</span>
+                            </div>
+                            <div>
+                                <span class="block text-3xl font-serif italic text-forest">18°C</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Average ambient breeze</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <div class="rounded-3xl overflow-hidden shadow-2xl border border-charcoal/10">
+                            <img src="https://placehold.co/800x1000/2C362D/E3DDD3?text=Dago+Architectural+Curves" alt="Dago Architecture" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Signature Dago Ritual Menu -->
+            <section id="dago-menu" class="py-24 bg-stoneLight px-6">
+                <div class="max-w-5xl mx-auto space-y-16">
+                    <div class="text-center space-y-4">
+                        <span class="text-xs uppercase tracking-[0.25em] text-forest font-semibold">Curated Offerings</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic">Signature Dago Rituals</h2>
+                        <p class="text-charcoal/70 text-sm md:text-base max-w-xl mx-auto">
+                            Crafted specifically for cool mountain altitudes using locally sourced West Java beans and botanical infusions.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-canvas p-8 rounded-3xl border border-charcoal/10 shadow-sm space-y-4 flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-baseline">
+                                    <h3 class="text-2xl font-serif italic">Mountain Haze Latte</h3>
+                                    <span class="font-sans text-sm font-bold text-forest">IDR 48K</span>
+                                </div>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    Double shot espresso infused with house-made smoked pine syrup, oat milk, and a dusting of mountain cinnamon.
+                                </p>
+                            </div>
+                            <span class="inline-block text-[10px] uppercase tracking-widest bg-forest/10 text-forest px-3 py-1 rounded-full w-max">Bestseller</span>
+                        </div>
+
+                        <div class="bg-canvas p-8 rounded-3xl border border-charcoal/10 shadow-sm space-y-4 flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-baseline">
+                                    <h3 class="text-2xl font-serif italic">Dago Cold Brew Tonic</h3>
+                                    <span class="font-sans text-sm font-bold text-forest">IDR 45K</span>
+                                </div>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    18-hour slow steep Java Preanger single-origin paired with artisanal craft tonic water and fresh rosemary sprig.
+                                </p>
+                            </div>
+                            <span class="inline-block text-[10px] uppercase tracking-widest bg-forest/10 text-forest px-3 py-1 rounded-full w-max">Refreshing</span>
+                        </div>
+
+                        <div class="bg-canvas p-8 rounded-3xl border border-charcoal/10 shadow-sm space-y-4 flex flex-col justify-between">
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-baseline">
+                                    <h3 class="text-2xl font-serif italic">Warm Brioche Toast</h3>
+                                    <span class="font-sans text-sm font-bold text-forest">IDR 62K</span>
+                                </div>
+                                <p class="text-charcoal/70 text-sm leading-relaxed">
+                                    Thick-cut artisanal brioche soaked in vanilla bean custard, served with whipped cultured butter and wild forest honey.
+                                </p>
+                            </div>
+                            <span class="inline-block text-[10px] uppercase tracking-widest bg-forest/10 text-forest px-3 py-1 rounded-full w-max">Patisserie</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Bridge Footer Links -->
+            <section class="py-16 bg-canvas border-t border-charcoal/10 px-6">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+                    <div>
+                        <span class="text-xs uppercase tracking-widest text-charcoal/60">Continue Exploring</span>
+                        <h3 class="text-2xl font-serif italic">Discover Other DE.U Sanctuaries</h3>
+                    </div>
+                    <div class="flex flex-wrap items-center justify-center gap-4">
+                        <button onclick="switchPage('riau')" class="bg-stoneLight text-charcoal px-6 py-3 rounded-full font-sans text-xs uppercase tracking-wider font-semibold hover:bg-forest hover:text-canvas transition-all">
+                            Visit Riau (Urban) <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                        <button onclick="switchPage('braga')" class="bg-stoneLight text-charcoal px-6 py-3 rounded-full font-sans text-xs uppercase tracking-wider font-semibold hover:bg-forest hover:text-canvas transition-all">
+                            Visit Braga (Heritage) <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= PAGE 3: RIAU.HTML (URBAN SANCTUARY) ================= -->
+        <div id="page-riau" class="page-view">
+            <!-- Hero -->
+            <section class="relative min-h-[85vh] flex items-center justify-center px-6 py-20 overflow-hidden bg-espresso text-canvas">
+                <div class="absolute inset-0 z-0 opacity-40">
+                    <img src="https://placehold.co/1920x1080/5C4A42/FFFFFF?text=DE.U+Riau+Urban" alt="DE.U Riau Urban" class="w-full h-full object-cover image-zoom">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-espresso via-espresso/40 to-transparent z-10"></div>
+                
+                <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-slide-up">
+                    <span class="inline-block uppercase tracking-[0.3em] text-xs font-semibold text-sand bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                        Urban Brutalist Sanctuary
+                    </span>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tight leading-none text-canvas">
+                        Concrete Calm in the City
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-sand/90 text-base md:text-lg font-light leading-relaxed">
+                        Located on the bustling Riau avenue. Designed for focused minds, creative exchanges, and modern minimalist aesthetics.
+                    </p>
+                    <div class="flex items-center justify-center gap-4 pt-4">
+                        <button onclick="openModal()" class="bg-sand text-charcoal px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all shadow-lg">
+                            Plan Riau Visit
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content & Menu -->
+            <section class="py-24 px-6 max-w-7xl mx-auto space-y-24">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="relative rounded-3xl overflow-hidden shadow-xl border border-charcoal/10">
+                        <img src="https://placehold.co/800x800/5C4A42/E3DDD3?text=Riau+Interior" alt="Riau Interior" class="w-full h-full object-cover">
+                    </div>
+                    <div class="space-y-6">
+                        <span class="text-xs uppercase tracking-[0.25em] text-espresso font-semibold">Brutalist Design</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic">Form, Shadow & Espresso</h2>
+                        <p class="text-charcoal/80 text-base leading-relaxed font-light">
+                            DE.U Riau embraces raw architectural concrete, sleek anodized aluminum, and warm linear LED lighting. It is engineered to filter out urban chaos while retaining the vibrant pulse of Bandung’s premier shopping district.
+                        </p>
+                        <div class="pt-4 border-t border-charcoal/10 flex items-center gap-8">
+                            <div>
+                                <span class="block font-serif text-3xl italic text-espresso">07:00 – 23:00</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Daily Hours</span>
+                            </div>
+                            <div>
+                                <span class="block font-serif text-3xl italic text-espresso">High Speed</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Dedicated Wi-Fi Hub</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Localized Menu Highlights -->
+                <div class="space-y-12">
+                    <div class="text-center space-y-4">
+                        <span class="text-xs uppercase tracking-[0.25em] text-espresso font-semibold">Urban Menu</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic">Riau Specialty Curation</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Velvet Mocha Noir</h3>
+                            <p class="text-charcoal/70 text-sm">70% single-origin dark chocolate ganache folded into silky espresso and textured milk.</p>
+                            <span class="font-bold text-sm text-espresso">IDR 50K</span>
+                        </div>
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Citrus Espresso Fizz</h3>
+                            <p class="text-charcoal/70 text-sm">Espresso shot poured over freshly squeezed yuzu juice and sparkling mineral water.</p>
+                            <span class="font-bold text-sm text-espresso">IDR 45K</span>
+                        </div>
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Truffe Mushroom Croissant</h3>
+                            <p class="text-charcoal/70 text-sm">Flaky golden butter croissant filled with sautéed wild mushrooms and truffle paste.</p>
+                            <span class="font-bold text-sm text-espresso">IDR 58K</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= PAGE 4: BRAGA.HTML (HERITAGE BAR) ================= -->
+        <div id="page-braga" class="page-view">
+            <!-- Hero -->
+            <section class="relative min-h-[85vh] flex items-center justify-center px-6 py-20 overflow-hidden bg-charcoal text-canvas">
+                <div class="absolute inset-0 z-0 opacity-40">
+                    <img src="https://placehold.co/1920x1080/1C1B1A/FFFFFF?text=DE.U+Braga+Heritage" alt="DE.U Braga Heritage" class="w-full h-full object-cover image-zoom">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-transparent z-10"></div>
+                
+                <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-slide-up">
+                    <span class="inline-block uppercase tracking-[0.3em] text-xs font-semibold text-sand bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                        Heritage Street Culture Branch
+                    </span>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tight leading-none text-canvas">
+                        Intimate Bar Vibes on Braga
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-sand/90 text-base md:text-lg font-light leading-relaxed">
+                        Rooted in the legendary art deco street of Bandung. Warm amber lighting, vintage character, and late-night vinyl sessions.
+                    </p>
+                    <div class="flex items-center justify-center gap-4 pt-4">
+                        <button onclick="openModal()" class="bg-sand text-charcoal px-8 py-4 rounded-full font-sans text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all shadow-lg">
+                            Plan Braga Visit
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content & Menu -->
+            <section class="py-24 px-6 max-w-7xl mx-auto space-y-24">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-6">
+                        <span class="text-xs uppercase tracking-[0.25em] text-sand font-semibold">Historic Alleyway</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic">Where Time Slows Down</h2>
+                        <p class="text-charcoal/80 text-base leading-relaxed font-light">
+                            DE.U Braga preserves the colonial soul of the building while integrating contemporary coffee mixology. Exposed brick walls, vintage leather seating, and low-frequency analog music create a seductive intimacy after sunset.
+                        </p>
+                        <div class="pt-4 border-t border-charcoal/10 flex items-center gap-8">
+                            <div>
+                                <span class="block font-serif text-3xl italic text-charcoal">10:00 – 00:00</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Late Night Hours</span>
+                            </div>
+                            <div>
+                                <span class="block font-serif text-3xl italic text-charcoal">Vinyl Curation</span>
+                                <span class="text-xs uppercase tracking-wider text-charcoal/60">Analog Sound</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative rounded-3xl overflow-hidden shadow-xl border border-charcoal/10">
+                        <img src="https://placehold.co/800x800/1C1B1A/E3DDD3?text=Braga+Bar+Counter" alt="Braga Bar" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Menu -->
+                <div class="space-y-12">
+                    <div class="text-center space-y-4">
+                        <span class="text-xs uppercase tracking-[0.25em] text-charcoal font-semibold">Braga Menu</span>
+                        <h2 class="text-4xl md:text-6xl font-serif italic">Heritage Bar Highlights</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Batavia Spiced Cold Brew</h3>
+                            <p class="text-charcoal/70 text-sm">Cold brew infused with star anise, cinnamon, clove, and palm nectar syrup.</p>
+                            <span class="font-bold text-sm text-charcoal">IDR 48K</span>
+                        </div>
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Cascara Spritz</h3>
+                            <p class="text-charcoal/70 text-sm">Coffee cherry husk tea carbonated with lime and fresh mint.</p>
+                            <span class="font-bold text-sm text-charcoal">IDR 42K</span>
+                        </div>
+                        <div class="bg-stoneLight p-8 rounded-3xl border border-charcoal/10 space-y-4">
+                            <h3 class="text-2xl font-serif italic">Cinnamon Palm Cane Cake</h3>
+                            <p class="text-charcoal/70 text-sm">Traditional colonial-inspired spiced butter cake served warm with caramel.</p>
+                            <span class="font-bold text-sm text-charcoal">IDR 45K</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- ================= PAGE 5: STORY.HTML (PHILOSOPHY & ARCHITECTURE) ================= -->
+        <div id="page-story" class="page-view">
+            <!-- Hero -->
+            <section class="relative min-h-[80vh] flex items-center justify-center px-6 py-20 overflow-hidden bg-forest text-canvas">
+                <div class="absolute inset-0 z-0 opacity-40">
+                    <img src="https://placehold.co/1920x1080/2C362D/FFFFFF?text=DE.U+Story+Philosophy" alt="DE.U Story" class="w-full h-full object-cover image-zoom">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-forest via-forest/40 to-transparent z-10"></div>
+                
+                <div class="relative z-20 max-w-5xl mx-auto text-center space-y-8 animate-slide-up">
+                    <span class="inline-block uppercase tracking-[0.3em] text-xs font-semibold text-sand bg-white/10 px-4 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                        Brand Narrative & Philosophy
+                    </span>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic tracking-tight leading-none text-canvas">
+                        The Genesis of DE.U
+                    </h1>
+                    <p class="max-w-2xl mx-auto text-sand/90 text-base md:text-lg font-light leading-relaxed">
+                        How a collective of architects and coffee agronomists set out to redefine physical hospitality in Bandung.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Editorial Long-form Story -->
+            <section class="py-24 px-6 max-w-4xl mx-auto space-y-16">
+                <div class="space-y-6">
+                    <h2 class="text-4xl md:text-6xl font-serif italic">1. The Birth of DE.U (2021)</h2>
+                    <p class="text-charcoal/80 text-lg leading-relaxed font-light">
+                        Founded in the midst of a shifting world, DE.U was born from a simple yet radical premise: that a coffee shop should be an architectural sanctuary rather than a transaction counter. The founders—spanning spatial designers, acoustic engineers, and West Java coffee farmers—envisioned spaces where material honesty, natural light, and exceptional bean stewardship intersect.
+                    </p>
+                    <p class="text-charcoal/80 text-lg leading-relaxed font-light">
+                        The name "DE.U" is derived from a synthesis of design ethos and urban sanctuary—a quiet reminder that every space we inhabit shapes the quality of our inner dialogue.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 my-12">
+                    <img src="https://placehold.co/600x400/2C362D/E3DDD3?text=Architectural+Sketch+1" alt="Sketch 1" class="rounded-2xl shadow-md w-full object-cover">
+                    <img src="https://placehold.co/600x400/5C4A42/F9F8F6?text=Architectural+Sketch+2" alt="Sketch 2" class="rounded-2xl shadow-md w-full object-cover">
+                </div>
+
+                <div class="space-y-6">
+                    <h2 class="text-4xl md:text-6xl font-serif italic">2. The Philosophy of Hospitality</h2>
+                    <p class="text-charcoal/80 text-lg leading-relaxed font-light">
+                        Hospitality at DE.U is rooted in intentional silence and genuine warmth. We believe that true luxury is not about opulence, but about space to breathe, acoustic clarity that allows quiet conversations, and service that anticipates without intruding.
+                    </p>
+                    <p class="text-charcoal/80 text-lg leading-relaxed font-light">
+                        Every bean we roast is sourced directly from sustainable high-altitude farms across West Java (Mount Puntang, Malabar, and Dago Pakar), ensuring that the journey from volcanic soil to your ceramic cup honors both the earth and the hands that harvested it.
+                    </p>
+                </div>
+
+                <div class="space-y-6">
+                    <h2 class="text-4xl md:text-6xl font-serif italic">3. Architectural Design Notes</h2>
+                    <p class="text-charcoal/80 text-lg leading-relaxed font-light">
+                        Our three locations represent a deliberate architectural triad:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-3 text-charcoal/80 text-lg font-light">
+                        <li><strong>Dago:</strong> Organic Brutalism & Mountain Air. Cantilevered structures, raw timber, and open courtyards blending with pine forests.</li>
+                        <li><strong>Riau:</strong> Urban Modernism. Sleek glass panels, exposed concrete textures, and refined lighting designed for urban focus.</li>
+                        <li><strong>Braga:</strong> Heritage Character. Preserving colonial brickwork, intimate bar counters, and amber evening moods.</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="bg-charcoal text-canvas pt-20 pb-12 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 pb-16 border-b border-white/10">
+            <!-- Col 1 -->
+            <div class="space-y-4 md:col-span-1">
+                <span class="text-2xl font-serif tracking-widest font-semibold text-canvas">DE.U COFFEE</span>
+                <p class="text-sand/70 text-sm leading-relaxed">
+                    Architectural coffee sanctuaries across Bandung. Designed for calm, brewed for craft.
+                </p>
+            </div>
+
+            <!-- Col 2 -->
+            <div class="space-y-4">
+                <h4 class="text-xs uppercase tracking-[0.25em] font-semibold text-sand">Destinations</h4>
+                <ul class="space-y-2 text-sm text-sand/80">
+                    <li><button onclick="switchPage('dago')" class="hover:text-canvas transition-colors">DE.U Dago (Mountain)</button></li>
+                    <li><button onclick="switchPage('riau')" class="hover:text-canvas transition-colors">DE.U Riau (Urban)</button></li>
+                    <li><button onclick="switchPage('braga')" class="hover:text-canvas transition-colors">DE.U Braga (Heritage)</button></li>
+                </ul>
+            </div>
+
+            <!-- Col 3 -->
+            <div class="space-y-4">
+                <h4 class="text-xs uppercase tracking-[0.25em] font-semibold text-sand">Company</h4>
+                <ul class="space-y-2 text-sm text-sand/80">
+                    <li><button onclick="switchPage('story')" class="hover:text-canvas transition-colors">Story & Philosophy</button></li>
+                    <li><button onclick="openModal()" class="hover:text-canvas transition-colors">Plan Your Visit</button></li>
+                    <li><a href="#careers" onclick="showNotification('We are always looking for passionate people. Email careers@deucoffee.id')" class="hover:text-canvas transition-colors">Careers</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Newsletter -->
+            <div class="space-y-4 md:col-span-1">
+                <h4 class="text-xs uppercase tracking-[0.25em] font-semibold text-sand">Journal Newsletter</h4>
+                <p class="text-sand/70 text-xs leading-relaxed">
+                    Receive occasional essays on architecture, single-origin drops, and private tasting invites.
+                </p>
+                <form onsubmit="handleNewsletter(event)" class="space-y-2">
+                    <input type="email" required placeholder="Enter your email address" class="w-full bg-white/5 border border-white/20 rounded-xl px-4 py-3 text-sm text-canvas placeholder:text-sand/40 focus:outline-none focus:border-sand transition-colors">
+                    <button type="submit" class="w-full bg-sand text-charcoal py-3 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-white transition-all">
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-sand/50 gap-4">
+            <p>&copy; 2026 DE.U Coffee Ecosystem. All rights reserved.</p>
+            <div class="flex items-center gap-6">
+                <a href="#" class="hover:text-sand transition-colors">Privacy Policy</a>
+                <a href="#" class="hover:text-sand transition-colors">Terms of Service</a>
+                <a href="#" class="hover:text-sand transition-colors">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Plan Your Visit Modal / Drawer -->
+    <div id="visit-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-charcoal/60 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div id="modal-content" class="bg-canvas w-full max-w-2xl rounded-3xl shadow-2xl border border-charcoal/10 overflow-hidden transform scale-95 transition-transform duration-300">
+            <!-- Modal Header -->
+            <div class="p-6 md:p-8 bg-forest text-canvas flex items-center justify-between">
+                <div>
+                    <span class="text-xs uppercase tracking-[0.25em] text-sand font-semibold">Interactive Concierge</span>
+                    <h3 class="text-3xl font-serif italic mt-1">Plan Your DE.U Visit</h3>
+                </div>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-canvas transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
+                <!-- Branch Selector -->
+                <div class="space-y-2">
+                    <label class="block text-xs uppercase tracking-widest font-bold text-charcoal/70">Select Destination Branch</label>
+                    <select id="modal-branch-select" onchange="updateModalDetails()" class="w-full bg-stoneLight border border-charcoal/20 rounded-xl px-4 py-3 text-sm text-charcoal font-medium focus:outline-none focus:border-forest">
+                        <option value="dago">DE.U Dago (Mountain Flagship)</option>
+                        <option value="riau">DE.U Riau (Urban Brutalist)</option>
+                        <option value="braga">DE.U Braga (Heritage Bar)</option>
+                    </select>
+                </div>
+
+                <!-- Dynamic Branch Info Box -->
+                <div id="modal-branch-info" class="bg-stoneLight p-6 rounded-2xl space-y-4 border border-charcoal/10">
+                    <div class="flex items-center justify-between">
+                        <h4 id="info-branch-name" class="text-2xl font-serif italic">DE.U Dago</h4>
+                        <span id="info-branch-hours" class="text-xs font-semibold uppercase tracking-wider bg-forest text-canvas px-3 py-1 rounded-full">07:00 – 22:00</span>
+                    </div>
+                    <p id="info-branch-address" class="text-sm text-charcoal/80">Jl. Dago Giri No. 168, Dago Pakar, Bandung Utara</p>
+                    
+                    <!-- Live Simulation Widget -->
+                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-charcoal/10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-forest/10 flex items-center justify-center text-forest">
+                                <i id="info-weather-icon" class="fa-solid fa-cloud-sun"></i>
+                            </div>
+                            <div>
+                                <span id="info-weather" class="block text-sm font-bold">18°C · Mist & Breeze</span>
+                                <span class="text-[10px] uppercase tracking-wider text-charcoal/60">Live Weather Simulation</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-forest/10 flex items-center justify-center text-forest">
+                                <i class="fa-solid fa-users"></i>
+                            </div>
+                            <div>
+                                <span id="info-crowd" class="block text-sm font-bold">Moderate Calm</span>
+                                <span class="text-[10px] uppercase tracking-wider text-charcoal/60">Seating Availability</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Reservation / Directions Action -->
+                <div class="pt-2 flex flex-col sm:flex-row gap-4">
+                    <button onclick="handleReservationSubmit()" class="flex-1 bg-forest text-canvas py-4 rounded-xl text-xs uppercase tracking-widest font-semibold hover:bg-espresso transition-all shadow-md">
+                        <i class="fa-solid fa-calendar-check mr-2"></i> Reserve Table / Get Directions
+                    </button>
+                    <button onclick="closeModal()" class="sm:w-auto px-6 py-4 rounded-xl border border-charcoal/20 text-xs uppercase tracking-widest font-semibold hover:bg-charcoal/5 transition-all">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Toast Notification Banner -->
+    <div id="toast-notification" class="fixed bottom-6 right-6 z-50 bg-charcoal text-canvas px-6 py-4 rounded-2xl shadow-2xl transform translate-y-32 opacity-0 transition-all duration-300 flex items-center gap-3 border border-white/10">
+        <i class="fa-solid fa-circle-check text-sand text-xl"></i>
+        <div>
+            <h5 class="text-xs uppercase tracking-widest font-semibold text-sand">DE.U Concierge</h5>
+            <p id="toast-message" class="text-sm text-canvas/90">Action completed successfully.</p>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Multi-page navigation state controller
+        function switchPage(pageId) {
+            // Hide all views
+            const views = document.querySelectorAll('.page-view');
+            views.forEach(v => v.classList.remove('active'));
+
+            // Show target view
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update active nav styles
+            const navButtons = document.querySelectorAll('.nav-link');
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-nav') === pageId) {
+                    btn.classList.add('text-forest', 'font-bold');
+                } else {
+                    btn.classList.remove('text-forest', 'font-bold');
+                }
+            });
+
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                document.getElementById('mobile-menu-icon').className = 'fa-solid fa-bars text-xl';
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = 'fa-solid fa-xmark text-xl';
+            } else {
+                menu.classList.add('hidden');
+                icon.className = 'fa-solid fa-bars text-xl';
+            }
+        }
+
+        // Modal open & close
+        function openModal() {
+            const modal = document.getElementById('visit-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100');
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+            updateModalDetails();
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('visit-modal');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+        }
+
+        // Dynamic modal branch details
+        const branchData = {
+            dago: {
+                name: "DE.U Dago",
+                hours: "07:00 – 22:00",
+                address: "Jl. Dago Giri No. 168, Dago Pakar, Bandung Utara",
+                weather: "18°C · Mountain Mist & Breeze",
+                weatherIcon: "fa-solid fa-cloud-sun",
+                crowd: "Quiet & Spacious"
+            },
+            riau: {
+                name: "DE.U Riau",
+                hours: "07:00 – 23:00",
+                address: "Jl. Riau No. 45, Citarum, Bandung Wetan",
+                weather: "26°C · Urban Sunny & Breezy",
+                weatherIcon: "fa-solid fa-sun",
+                crowd: "Active & Focused"
+            },
+            braga: {
+                name: "DE.U Braga",
+                hours: "10:00 – 00:00",
+                address: "Jl. Braga No. 12, Sumur Bandung, Kota Bandung",
+                weather: "24°C · Warm Evening Amber",
+                weatherIcon: "fa-solid fa-moon",
+                crowd: "Intimate & Lively"
+            }
+        };
+
+        function updateModalDetails() {
+            const select = document.getElementById('modal-branch-select');
+            const key = select.value;
+            const data = branchData[key];
+
+            document.getElementById('info-branch-name').innerText = data.name;
+            document.getElementById('info-branch-hours').innerText = data.hours;
+            document.getElementById('info-branch-address').innerText = data.address;
+            document.getElementById('info-weather').innerText = data.weather;
+            document.getElementById('info-weather-icon').className = data.weatherIcon;
+            document.getElementById('info-crowd').innerText = data.crowd;
+        }
+
+        // Notifications
+        function showNotification(msg) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.innerText = msg;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 4000);
+        }
+
+        function handleNewsletter(e) {
+            e.preventDefault();
+            showNotification("Thank you for subscribing to the DE.U Journal.");
+            e.target.reset();
+        }
+
+        function handleReservationSubmit() {
+            closeModal();
+            showNotification("Table request noted! We look forward to welcoming you.");
+        }
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('site-header');
+            if (window.scrollY > 30) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+
+        // Initialize default view on load
+        window.onload = function() {
+            switchPage('index');
+        }
+    </script>
+</body>
+</html>
